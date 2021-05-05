@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,18 +16,69 @@ namespace SubnauticaTheme
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        private List<IWidget> widgets = new List<IWidget>();
+
         public MainWindow()
         {
             InitializeComponent();
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var timer = new System.Timers.Timer(1000);
+            var red = new Color
+            {
+                R = 220,
+                G = 95,
+                B = 60,
+                A = 255
+            };
+
+            var green = new Color
+            {
+                R = 145,
+                G = 215,
+                B = 60,
+                A = 255
+            };
+
+            var yellow = new Color
+            {
+                R = 250,
+                G = 170,
+                B = 35,
+                A = 255
+            };
+
+            var blue = new Color
+            {
+                R = 50,
+                G = 170,
+                B = 215,
+                A = 255
+            };
+
+
+            var w = Main_Canvas.ActualWidth;
+            var h = Main_Canvas.ActualHeight - 16;
+
+            // 1
+            widgets.Add(new DiskUsageWidget(red, 60, 0.02 * w, h - 3 * 72));
+
+            // 2
+            widgets.Add(new CPUPercentageWidget(yellow, 60, 0.02 * w + 30, h - 2 * 72));
+
+            // 3
+            widgets.Add(new RamWidget(blue, 60, 0.02 * w + 100, h - 1.5 * 72));
+
+            // Main
+            widgets.Add(new BatteryWidget(green, 120, 0.02 * w + 60 + 16, h - 3.5 * 72));
+
+            var timer = new Timer(widgets.Min(it => it.GetUpdateFrequency()));
             timer.Elapsed += OnTimedEvent;
             timer.AutoReset = true;
             timer.Enabled = true;
-           
         }
 
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
@@ -31,83 +86,15 @@ namespace SubnauticaTheme
             Main_Canvas.Dispatcher.Invoke(
                 () =>
                 {
-                    var red = new Color
-                    {
-                        R = 220,
-                        G = 95,
-                        B = 60,
-                        A = 255
-                    };
-                    var random = new Random();
+                    
                     Main_Canvas.Children.Clear();
-                    DrawPieChart(Main_Canvas.ActualHeight - 260.0, 95.0, 120, random.Next(360), red);
-                    DrawPieChart(Main_Canvas.ActualHeight - 220.0, 32.0, 60, random.Next(360), red);
+                    foreach (var widget in widgets)
+                    {
+                        widget.Update();
+                        widget.Draw(Main_Canvas);
+                    }
+
                 });
-        }
-
-
-        private void DrawPieChart(double top, double left, double size, double angle, Color color)
-        {
-            var background = new Color
-            {
-                R = 105,
-                G = 190,
-                B = 190,
-                A = 200
-            };
-
-            var strokeSize = size / 4;
-
-            var actualAngle = angle - 90.0;
-
-            var angleRadians = actualAngle * Math.PI / 180.0;
-
-            var endX = left + size / 2 + (Math.Cos(angleRadians) * size / 2) - (Math.Cos(angleRadians) * strokeSize / 2);
-            var endY = top + size / 2 + (Math.Sin(angleRadians) * size / 2) - (Math.Sin(angleRadians) * strokeSize / 2);
-
-            Ellipse newEllipse = new Ellipse();
-            newEllipse.Width = size;
-            newEllipse.Height = size;
-            newEllipse.Fill = new SolidColorBrush(background);
-            newEllipse.SetValue(Canvas.LeftProperty, left);
-            newEllipse.SetValue(Canvas.TopProperty, top);
-            Main_Canvas.Children.Add(newEllipse);
-
-            var g = new StreamGeometry();
-
-            using (var gc = g.Open())
-            {
-                gc.BeginFigure(
-                    startPoint: new Point(left + size / 2, top + strokeSize / 2),
-                    isFilled: false,
-                    isClosed: false);
-
-                gc.ArcTo(
-                    point: new Point(endX, endY),
-                    size: new Size(size / 2 - strokeSize / 2, size / 2 - strokeSize / 2),
-                    rotationAngle: 0d,
-                    isLargeArc: angle > 180,
-                    sweepDirection: SweepDirection.Clockwise,
-                    isStroked: true,
-                    isSmoothJoin: false);
-            }
-
-            var path = new Path
-            {
-                Stroke = new SolidColorBrush(color),
-                StrokeThickness = strokeSize,
-                Data = g
-            };
-
-            Main_Canvas.Children.Add(path);
-
-            Ellipse center = new Ellipse();
-            center.Width = size / 2;
-            center.Height = size / 2;
-            center.Fill = new SolidColorBrush(background);
-            center.SetValue(Canvas.LeftProperty, left + size / 4);
-            center.SetValue(Canvas.TopProperty, top + size / 4);
-            Main_Canvas.Children.Add(center);
         }
 
     }

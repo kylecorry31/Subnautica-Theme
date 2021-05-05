@@ -1,0 +1,60 @@
+﻿using Microsoft.TeamFoundation.Common.Internal;
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Windows.Media;
+using Topshelf.Runtime.Windows;
+
+namespace SubnauticaTheme
+{
+    class RamWidget : PieChartWidget
+    {
+        private readonly PerformanceCounter ramCounter;
+
+        public RamWidget(Color color, double size, double x, double y) : base(color, size, x, y)
+        {
+            ramCounter = new PerformanceCounter("Memory", "Available MBytes", true);
+        }
+
+        public override double GetPercentage()
+        {
+            ulong installedMemory = 1;
+            MEMORYSTATUSEX memStatus = new MEMORYSTATUSEX();
+            if (GlobalMemoryStatusEx(memStatus))
+            {
+                installedMemory = memStatus.ullTotalPhys;
+            }
+
+            return 1 - ramCounter.NextValue() / ((double)installedMemory / (1024 * 1024));
+        }
+
+        public override long GetUpdateFrequency()
+        {
+            return 1000;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        private class MEMORYSTATUSEX
+        {
+            public uint dwLength;
+            public uint dwMemoryLoad;
+            public ulong ullTotalPhys;
+            public ulong ullAvailPhys;
+            public ulong ullTotalPageFile;
+            public ulong ullAvailPageFile;
+            public ulong ullTotalVirtual;
+            public ulong ullAvailVirtual;
+            public ulong ullAvailExtendedVirtual;
+            public MEMORYSTATUSEX()
+            {
+                this.dwLength = (uint)Marshal.SizeOf(typeof(MEMORYSTATUSEX));
+            }
+        }
+
+
+        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
+
+    }
+}
