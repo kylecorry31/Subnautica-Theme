@@ -1,21 +1,19 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace SubnauticaTheme
 {
     class CPUPercentageWidget : PieChartWidget
     {
-        private readonly PerformanceCounter cpuCounter;
+        private readonly Processor processor;
 
-        public CPUPercentageWidget(Color color, double size, double x, double y) : base(color, size, x, y)
+        public CPUPercentageWidget(Color color, double size, double x, double y) : base(color, size, x, y, "/Images/chip.png")
         {
-            cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total", Environment.MachineName);
+            processor = new Processor();
         }
 
         public override double GetPercentage()
         {
-            return 1 - cpuCounter.NextValue() / 100.0;
+            return 1 - processor.GetUtilizationPercent() / 100.0;
         }
 
         public override long GetUpdateFrequency()

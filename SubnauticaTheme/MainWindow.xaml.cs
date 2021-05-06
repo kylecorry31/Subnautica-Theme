@@ -86,7 +86,7 @@ namespace SubnauticaTheme
             Main_Canvas.Dispatcher.Invoke(
                 () =>
                 {
-                    
+
                     Main_Canvas.Children.Clear();
                     foreach (var widget in widgets)
                     {

@@ -7,11 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Toolkit.Uwp" Version="7.0.1" />
+    <None Remove="Images\battery.png" />
+    <None Remove="Images\chip.png" />
+    <None Remove="Images\memory.png" />
+    <None Remove="Images\right_panel.png" />
+    <None Remove="Images\storage.png" />
+    <None Remove="Images\top_panel.png" />
+    <None Remove="Images\wifi.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Services.Client" Version="16.170.0" />
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1" />
     <PackageReference Include="System.Management" Version="5.0.0" />
-    <PackageReference Include="Topshelf" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\battery.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\chip.png" />
+    <Resource Include="Images\memory.png" />
+    <Resource Include="Images\right_panel.png" />
+    <Resource Include="Images\storage.png" />
+    <Resource Include="Images\top_panel.png" />
+    <Resource Include="Images\wifi.png" />
   </ItemGroup>
 
 </Project>

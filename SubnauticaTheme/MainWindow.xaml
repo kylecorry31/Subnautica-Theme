@@ -15,5 +15,6 @@
     <Grid>
         <Canvas x:Name="Main_Canvas">
         </Canvas>
+        <!--<local:SubnauticaCanvas x:Name="Canvas2"></local:SubnauticaCanvas>-->
     </Grid>
 </Window>

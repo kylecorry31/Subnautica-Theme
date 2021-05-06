@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace SubnauticaTheme
@@ -14,18 +15,20 @@ namespace SubnauticaTheme
         private Color _color;
         private double _x;
         private double _y;
+        private string _image;
 
-        public PieChartWidget(Color color, double size, double x, double y)
+        public PieChartWidget(Color color, double size, double x, double y, string image)
         {
             _size = size;
             _color = color;
             _x = x;
             _y = y;
+            _image = image;
         }
 
         public void Draw(Canvas canvas)
         {
-            DrawPieChart(canvas, _y, _x, _size, 360 * _percentage, _color);
+            DrawPieChart(canvas, _y, _x, _size, 360 * _percentage, _color, _image);
         }
 
         public void Update()
@@ -36,7 +39,7 @@ namespace SubnauticaTheme
         public abstract long GetUpdateFrequency();
         public abstract double GetPercentage();
 
-        private void DrawPieChart(Canvas canvas, double top, double left, double size, double angle, Color color)
+        private void DrawPieChart(Canvas canvas, double top, double left, double size, double angle, Color color, string imagePath)
         {
             var background = new Color
             {
@@ -99,11 +102,14 @@ namespace SubnauticaTheme
             center.SetValue(Canvas.TopProperty, top + size / 4);
             canvas.Children.Add(center);
 
-            /*
-             * 
-             * BitmapImage img = new BitmapImage (new Uri ("c:\\demo.jpg"));
-      dc.DrawImage (img, new Rect (0, 0, img.PixelWidth, img.PixelHeight));
-             */
+            var img = new BitmapImage(new Uri(imagePath, UriKind.RelativeOrAbsolute));
+            var image = new Image();
+            image.SetValue(Canvas.LeftProperty, left + size / 3);
+            image.SetValue(Canvas.TopProperty, top + size / 3);
+            image.Height = size / 3;
+            image.Width = size / 3;
+            image.Source = img;
+            canvas.Children.Add(image);
         }
 
     }

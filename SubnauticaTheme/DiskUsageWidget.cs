@@ -1,23 +1,20 @@
-﻿using System.IO;
-using System.Linq;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace SubnauticaTheme
 {
     class DiskUsageWidget : PieChartWidget
     {
 
-        public DiskUsageWidget(Color color, double size, double x, double y) : base(color, size, x, y)
+        private readonly Disk disk;
+
+        public DiskUsageWidget(Color color, double size, double x, double y) : base(color, size, x, y, "/Images/storage.png")
         {
+            disk = new Disk();
         }
 
         public override double GetPercentage()
         {
-            var drives = DriveInfo.GetDrives();
-            var total = drives.Sum(it => it.TotalSize);
-            var free = drives.Sum(it => it.AvailableFreeSpace);
-
-            return 1 - free / (double)total;
+            return 1 - disk.GetPercentFree() / 100.0;
         }
 
         public override long GetUpdateFrequency()
