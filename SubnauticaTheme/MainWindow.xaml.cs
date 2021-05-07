@@ -51,7 +51,8 @@ namespace SubnauticaTheme
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             Canvas2.Dispatcher.Invoke(() => {
-                SendToBottom();
+                // TODO: Call send to bottom when the Window position changes
+                //SendToBottom();
                 if (DateTime.Now - lastWeatherCall > TimeSpan.FromMinutes(5))
                 {
                     weather.Update().Wait();
