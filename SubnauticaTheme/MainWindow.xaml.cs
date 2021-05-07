@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 
 namespace SubnauticaTheme
 {
@@ -17,65 +12,37 @@ namespace SubnauticaTheme
     public partial class MainWindow : Window
     {
 
-        private List<IWidget> widgets = new List<IWidget>();
+        private readonly Battery battery;
+        private readonly Processor processor;
+        private readonly Memory memory;
+        private readonly Disk storage;
+        private readonly Weather weather;
+
+        private DateTime lastWeatherCall = DateTime.MinValue;
+        static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
+        const UInt32 SWP_NOSIZE = 0x0001;
+        const UInt32 SWP_NOMOVE = 0x0002;
+        const UInt32 SWP_NOACTIVATE = 0x0010;
+        const UInt32 SWP_NOOWNERZORDER = 0x0200;
+        const UInt32 SWP_NOSENDCHANGING = 0x0400;
+
+        IntPtr windowHandle;
 
         public MainWindow()
         {
+            battery = new Battery();
+            processor = new Processor();
+            memory = new Memory();
+            storage = new Disk();
+            weather = new Weather("KPVD");
             InitializeComponent();
-
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var red = new Color
-            {
-                R = 220,
-                G = 95,
-                B = 60,
-                A = 255
-            };
-
-            var green = new Color
-            {
-                R = 145,
-                G = 215,
-                B = 60,
-                A = 255
-            };
-
-            var yellow = new Color
-            {
-                R = 250,
-                G = 170,
-                B = 35,
-                A = 255
-            };
-
-            var blue = new Color
-            {
-                R = 50,
-                G = 170,
-                B = 215,
-                A = 255
-            };
-
-
-            var w = Main_Canvas.ActualWidth;
-            var h = Main_Canvas.ActualHeight - 16;
-
-            // 1
-            widgets.Add(new DiskUsageWidget(red, 60, 0.02 * w, h - 3 * 72));
-
-            // 2
-            widgets.Add(new CPUPercentageWidget(yellow, 60, 0.02 * w + 30, h - 2 * 72));
-
-            // 3
-            widgets.Add(new RamWidget(blue, 60, 0.02 * w + 100, h - 1.5 * 72));
-
-            // Main
-            widgets.Add(new BatteryWidget(green, 120, 0.02 * w + 60 + 16, h - 3.5 * 72));
-
-            var timer = new Timer(widgets.Min(it => it.GetUpdateFrequency()));
+            windowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
+            SendToBottom();
+            var timer = new Timer(1000);
             timer.Elapsed += OnTimedEvent;
             timer.AutoReset = true;
             timer.Enabled = true;
@@ -83,19 +50,34 @@ namespace SubnauticaTheme
 
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            Main_Canvas.Dispatcher.Invoke(
-                () =>
+            Canvas2.Dispatcher.Invoke(() => {
+                SendToBottom();
+                if (DateTime.Now - lastWeatherCall > TimeSpan.FromMinutes(5))
                 {
+                    weather.Update().Wait();
+                    lastWeatherCall = DateTime.Now;
+                }
 
-                    Main_Canvas.Children.Clear();
-                    foreach (var widget in widgets)
-                    {
-                        widget.Update();
-                        widget.Draw(Main_Canvas);
-                    }
+                Canvas2.percentages[0] = 1 - storage.GetPercentFree() / 100.0;
+                Canvas2.percentages[1] = 1 - processor.GetUtilizationPercent() / 100.0;
+                Canvas2.percentages[2] = 1 - memory.GetUtilizationPercent() / 100.0;
+                Canvas2.percentages[3] = battery.GetBatteryPercentage() / 100.0;
+                Canvas2.temperature = Math.Round((weather.temperature * 9 / 5.0) + 32);
+                Canvas2.pressure = Math.Round(weather.pressure);
+                Canvas2.humidity = Math.Round(weather.humidity);
 
-                });
+                Canvas2.InvalidateVisual();
+            });
         }
 
+        private void SendToBottom()
+        {
+            SetWindowPos(windowHandle, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING);
+        }
+
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint flags);
     }
 }

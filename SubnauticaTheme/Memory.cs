@@ -24,7 +24,7 @@ namespace SubnauticaTheme
                 installedMemory = memStatus.ullTotalPhys;
             }
 
-            return 100 * counter.NextValue() / ((double)installedMemory / (1024 * 1024));
+            return 100 - (100 * counter.NextValue() / ((double)installedMemory / (1024 * 1024)));
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]

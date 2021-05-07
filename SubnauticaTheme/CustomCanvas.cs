@@ -16,6 +16,7 @@ namespace SubnauticaTheme
         private Brush strokeBrush;
         private Brush backgroundBrush;
         private Pen pen;
+        private double textSize = 12;
 
         protected bool runEveryCycle = true;
 
@@ -86,21 +87,23 @@ namespace SubnauticaTheme
         protected void Fill(Color color)
         {
             paintStyle = ShouldStroke() ? PaintStyle.FillAndStroke : PaintStyle.Fill;
+            fillBrush = fillBrush.Clone();
             fillBrush.SetValue(SolidColorBrush.ColorProperty, color);
         }
 
         protected void Stroke(Color color)
         {
             paintStyle = ShouldFill() ? PaintStyle.FillAndStroke : PaintStyle.Stroke;
+            strokeBrush = strokeBrush.Clone();
             strokeBrush.SetValue(SolidColorBrush.ColorProperty, color);
         }
 
-        protected void NoStroke(Color color)
+        protected void NoStroke()
         {
             paintStyle = ShouldFill() ? PaintStyle.Fill : PaintStyle.None;
         }
 
-        protected void NoFill(Color color)
+        protected void NoFill()
         {
             paintStyle = ShouldStroke() ? PaintStyle.Stroke : PaintStyle.None;
         }
@@ -114,7 +117,7 @@ namespace SubnauticaTheme
 
         protected void Ellipse(double x, double y, double w, double h)
         {
-            context.DrawEllipse(ShouldFill() ? fillBrush : null, ShouldStroke() ? pen : null, new System.Windows.Point(x, y), w / 2, h / 2);
+            context.DrawEllipse(ShouldFill() ? fillBrush : null, ShouldStroke() ? pen : null, new System.Windows.Point(x + w / 2, y + h / 2), w / 2, h / 2);
         }
 
         protected void Circle(double x, double y, double diameter)
@@ -137,14 +140,62 @@ namespace SubnauticaTheme
             context.DrawLine(pen, new System.Windows.Point(x1, y1), new System.Windows.Point(x2, y2));
         }
 
-        protected BitmapImage LoadImage(Uri uri)
+        protected void Arc(double x, double y, double w, double h, double start, double stop, ArcMode mode = ArcMode.Pie)
+        {
+            double startRadians = -start * Math.PI / 180.0;
+            double sweepRadians = -(stop - start) * Math.PI / 180.0;
+            
+            double rx = w / 2;
+            double ry = h / 2;
+
+            double startX = x + rx + (Math.Cos(startRadians) * rx);
+            double startY = y + ry + (Math.Sin(startRadians) * ry);
+
+            double endX = x + rx + (Math.Cos(startRadians + sweepRadians) * rx);
+            double endY = y + ry + (Math.Sin(startRadians + sweepRadians) * ry);
+
+            var geometry = new StreamGeometry();
+            using (var ctx = geometry.Open())
+            {
+                bool isLargeArc = Math.Abs(stop - start) > 180;
+                var direction = sweepRadians < 0 ? SweepDirection.Counterclockwise : SweepDirection.Clockwise;
+                ctx.BeginFigure(new System.Windows.Point(startX, startY), mode != ArcMode.Open, mode != ArcMode.Open);
+                ctx.ArcTo(new System.Windows.Point(endX, endY), new System.Windows.Size(rx, ry), 0, isLargeArc, direction, ShouldStroke(), false);
+                if (mode == ArcMode.Pie)
+                {
+                    ctx.LineTo(new System.Windows.Point(x + rx, y + ry), ShouldStroke(), false);
+                    ctx.LineTo(new System.Windows.Point(startX, startY), ShouldStroke(), false);
+                }
+            }
+
+            var drawing = new GeometryDrawing();
+            drawing.Geometry = geometry;
+            drawing.Pen = ShouldStroke() ? pen : null;
+            drawing.Brush = ShouldFill() ? fillBrush : null;
+            context.DrawDrawing(drawing);
+        }
+
+        protected ImageSource LoadImage(Uri uri)
         {
             return new BitmapImage(uri);
         }
 
-        protected void Image(BitmapImage image, double x, double y, double w, double h)
+        protected void Image(ImageSource img, double x, double y, double w, double h)
+        { 
+            context.DrawImage(img, new System.Windows.Rect(x, y, w, h));
+        }
+
+        protected void TextSize(double size)
         {
-            context.DrawImage(image, new System.Windows.Rect(x, y, w, h));
+            textSize = size;
+        }
+
+        protected void Text(string str, double x, double y, bool useCenter = false)
+        {
+            var formattedText = new FormattedText(str, System.Globalization.CultureInfo.CurrentCulture, System.Windows.FlowDirection.LeftToRight, new Typeface("Sans Serif"), textSize, fillBrush);
+            x = useCenter ? x - formattedText.Width / 2 : x;
+            y = useCenter ? y - formattedText.Height / 2 : y;
+            context.DrawText(formattedText, new System.Windows.Point(x, y));
         }
 
         private bool ShouldStroke()
@@ -165,7 +216,14 @@ namespace SubnauticaTheme
             FillAndStroke,
             None
         }
-        
+
+        protected enum ArcMode
+        {
+            Pie,
+            Open,
+            Chord
+        }
+
 
     }
 }
