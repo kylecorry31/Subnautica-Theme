@@ -190,6 +190,18 @@ namespace SubnauticaTheme
             textSize = size;
         }
 
+        protected double TextWidth(string str)
+        {
+            var formattedText = new FormattedText(str, System.Globalization.CultureInfo.CurrentCulture, System.Windows.FlowDirection.LeftToRight, new Typeface("Sans Serif"), textSize, fillBrush);
+            return formattedText.Width;
+        }
+
+        protected double TextHeight(string str)
+        {
+            var formattedText = new FormattedText(str, System.Globalization.CultureInfo.CurrentCulture, System.Windows.FlowDirection.LeftToRight, new Typeface("Sans Serif"), textSize, fillBrush);
+            return formattedText.Height;
+        }
+
         protected void Text(string str, double x, double y, bool useCenter = false)
         {
             var formattedText = new FormattedText(str, System.Globalization.CultureInfo.CurrentCulture, System.Windows.FlowDirection.LeftToRight, new Typeface("Sans Serif"), textSize, fillBrush);

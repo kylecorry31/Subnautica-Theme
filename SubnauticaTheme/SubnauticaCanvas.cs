@@ -52,7 +52,7 @@ namespace SubnauticaTheme
             Image(topPanel, x - w / 2, y - h / 4, w, h);
             Fill(Color(255));
             TextSize(48);
-            Text(DateTime.Now.ToShortTimeString(), x, y, true);
+            Text(DateTime.Now.ToShortTimeString(), x, y + 8, true);
         }
 
         private void RightPanel(double x, double y, double w, double h)
@@ -60,9 +60,23 @@ namespace SubnauticaTheme
             Image(rightPanel, x - w / 2, y - h / 4, w, h);
             Fill(Color(255));
             TextSize(28);
-            Text(pressure + " hPa", x - w * 0.25, y + h * 0.2, true);
-            Text(temperature + " °F", x + w * 0.2, y + h * 0.55, true);
-            Text(humidity + " %", x + w * 0.25, y, true);
+
+            var pressureWidth = TextWidth(pressure.ToString());
+            var pressureHeight = TextHeight(pressure.ToString());
+            var temperatureWidth = TextWidth(temperature.ToString());
+            var temperatureHeight = TextHeight(temperature.ToString());
+            var humidityWidth = TextWidth(humidity.ToString());
+            var humidityHeight = TextHeight(humidity.ToString());
+
+            Text(pressure.ToString(), x - w * 0.4, y + h * 0.2 - pressureHeight / 2, false);
+            Text(temperature.ToString(), x + w * 0.1, y + h * 0.55 - temperatureHeight / 2, false);
+            Text(humidity.ToString(), x + w * 0.15, y - humidityHeight / 2, false);
+
+            Fill(Color(255, 255, 0));
+            Text("hPa", x - w * 0.4 + pressureWidth + 8, y + h * 0.2 - pressureHeight / 2, false);
+            Text("°F", x + w * 0.1 + temperatureWidth + 8, y + h * 0.55 - temperatureHeight / 2, false);
+            Text("%", x + w * 0.15 + humidityWidth + 8, y - humidityHeight / 2, false);
+
         }
 
         private void DonutChart(double x, double y, double size, double angle, Color color, ImageSource img)
