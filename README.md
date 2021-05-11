@@ -1,4 +1,4 @@
-# SubnauticaTheme
+# Subnautica Theme
 
 A Windows Subnautica theme
 
@@ -22,3 +22,6 @@ This app uses the National Weather Service's API to get the current weather cond
 - Depending on your notification settings, opening your desktop while the theme is running will enable Do Not Disturb mode (because it's fullscreen)
 
 ![Desktop](desktop.jpg)
+
+## Development Note
+If this does not work for your computer, there's not much I can do - this project is really intended for me, but I made it available to share in case others wanted to try it out.
