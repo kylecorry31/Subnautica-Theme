@@ -19,6 +19,12 @@
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_39DEE6B938774A5D980742DBBA21CD38"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -76,6 +82,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -108,6 +122,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_39DEE6B938774A5D980742DBBA21CD38"
+            {
+            "SourcePath" = "8:..\\SubnauticaTheme\\Images\\logo.ico"
+            "TargetName" = "8:logo.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_A4977A163F274125AB5DF67665B6FC42"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -125,13 +159,13 @@
                 {
                 }
             }
-            "{1525181F-901A-416C-8A58-119130FE478E}:_6AC4B9FA40ED451DAF682C7CA1D2702A"
+            "{1525181F-901A-416C-8A58-119130FE478E}:_5499582D994C477B907869A1206D49AE"
             {
-            "Name" = "8:#1916"
+            "Name" = "8:#1928"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
-            "Property" = "8:DesktopFolder"
+            "Property" = "8:StartupFolder"
                 "Folders"
                 {
                 }
@@ -165,14 +199,14 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Subnautica Theme"
         "ProductCode" = "8:{128A6D55-9275-41ED-905C-80E492301593}"
-        "PackageCode" = "8:{B260D97D-3C05-4029-BE31-B7F4F9A16EDE}"
+        "PackageCode" = "8:{53F29577-55CD-4116-B245-11F6C4A32E94}"
         "UpgradeCode" = "8:{B6E8AF7A-2ADB-42C3-A8E1-536F4444CB3E}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:0.1.0"
         "Manufacturer" = "8:Kyle Corry"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -285,7 +319,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_442E869B3C1E463A99CE2835138814F4"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_8C3E3FDCE22A427FAFAA930D1D1CA03F"
             {
             "Name" = "8:Subnautica Theme"
             "Arguments" = "8:"
@@ -295,8 +329,22 @@
             "Transitive" = "11:FALSE"
             "Target" = "8:_1E5B3C9505174A1E907B6945CFA67F77"
             "Folder" = "8:_05755778617A47B2A9859ED979D32D40"
-            "WorkingFolder" = "8:"
-            "Icon" = "8:"
+            "WorkingFolder" = "8:_A4977A163F274125AB5DF67665B6FC42"
+            "Icon" = "8:_39DEE6B938774A5D980742DBBA21CD38"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_F3CA67CD6E5F4043959546A076FB4E8B"
+            {
+            "Name" = "8:Subnautica Theme"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_1E5B3C9505174A1E907B6945CFA67F77"
+            "Folder" = "8:_5499582D994C477B907869A1206D49AE"
+            "WorkingFolder" = "8:_A4977A163F274125AB5DF67665B6FC42"
+            "Icon" = "8:_39DEE6B938774A5D980742DBBA21CD38"
             "Feature" = "8:"
             }
         }
@@ -700,7 +748,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_1E5B3C9505174A1E907B6945CFA67F77"
             {
-            "SourcePath" = "8:..\\SubnauticaTheme\\obj\\Debug\\netcoreapp3.1\\SubnauticaTheme.exe"
+            "SourcePath" = "8:..\\SubnauticaTheme\\obj\\Debug\\netcoreapp3.1\\Subnautica Theme.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A4977A163F274125AB5DF67665B6FC42"

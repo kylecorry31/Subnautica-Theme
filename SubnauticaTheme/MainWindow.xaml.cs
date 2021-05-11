@@ -3,6 +3,8 @@ using System.Timers;
 using System.Windows;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using System.Reflection;
+using System.IO;
 
 namespace SubnauticaTheme
 {
@@ -34,8 +36,47 @@ namespace SubnauticaTheme
             processor = new Processor();
             memory = new Memory();
             storage = new Disk();
-            weather = new Weather("KPVD");
+            weather = new Weather(GetStation("KPVD"));
             InitializeComponent();
+        }
+
+        private string GetStation(string defaultStation)
+        {
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Subnautica Theme\station.txt");
+
+            try
+            {
+                if (!File.Exists(path))
+                {
+                    SetStation(defaultStation);
+                }
+                var station = File.ReadAllText(path).Trim();
+                if (string.IsNullOrEmpty(station))
+                {
+                    SetStation(defaultStation);
+                    return defaultStation;
+                }
+                return station;
+            } catch (Exception)
+            {
+                return defaultStation;
+            }
+        }
+
+        private void SetStation(string station)
+        {
+            try
+            {
+                var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Subnautica Theme");
+                Directory.CreateDirectory(directory);
+                var path = Path.Combine(directory, @"station.txt");
+                var writer = File.CreateText(path);
+                writer.Write(station);
+                writer.Close();
+            } catch (Exception)
+            {
+                // Do nothing
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

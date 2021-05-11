@@ -4,16 +4,39 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageIconUrl />
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <FileVersion>0.1.0.0</FileVersion>
+    <Version>0.1.0</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Company>Kyle Corry</Company>
+    <Authors>Kyle Corry</Authors>
+    <PackageId>Subnautica Theme</PackageId>
+    <Copyright>Kyle Corry</Copyright>
+    <AssemblyName>Subnautica Theme</AssemblyName>
+    <StartupObject>SubnauticaTheme.App</StartupObject>
+    <ApplicationIcon>Images\logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Images\battery.png" />
     <None Remove="Images\chip.png" />
+    <None Remove="Images\logo.ico" />
+    <None Remove="Images\logo.png" />
     <None Remove="Images\memory.png" />
     <None Remove="Images\right_panel.png" />
     <None Remove="Images\storage.png" />
     <None Remove="Images\top_panel.png" />
     <None Remove="Images\wifi.png" />
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="Images\logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +50,8 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\chip.png" />
+    <Resource Include="Images\logo.ico" />
+    <Resource Include="Images\logo.png" />
     <Resource Include="Images\memory.png" />
     <Resource Include="Images\right_panel.png" />
     <Resource Include="Images\storage.png" />

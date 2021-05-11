@@ -12,7 +12,7 @@
         AllowsTransparency="True"
         Background="Transparent"
         Activated="Window_Activated"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Subnautica Theme" Height="450" Width="800">
     <Grid>
        <!-- <Canvas x:Name="Main_Canvas">
         </Canvas>-->
